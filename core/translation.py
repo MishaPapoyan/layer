@@ -2,7 +2,7 @@
 Model translations for core app
 """
 from modeltranslation.translator import register, TranslationOptions
-from .models import SliderItem, AboutSection, TeamMember, ContactInfo, ContactMessage
+from .models import SliderItem, AboutSection, TeamMember, ContactInfo, ContactMessage, BlogPost
 
 
 @register(SliderItem)
@@ -23,4 +23,9 @@ class TeamMemberTranslationOptions(TranslationOptions):
 @register(ContactInfo)
 class ContactInfoTranslationOptions(TranslationOptions):
     fields = ('address',)
+
+
+@register(BlogPost)
+class BlogPostTranslationOptions(TranslationOptions):
+    fields = ('title', 'content')
 

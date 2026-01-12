@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import SliderItem, AboutSection, TeamMember, ContactInfo, ContactMessage
+from .models import SliderItem, AboutSection, TeamMember, ContactInfo, ContactMessage, BlogPost, Partner
 from .forms import ContactForm
 
 
 def home(request):
     """Home page with slider"""
     slider_items = SliderItem.objects.filter(is_active=True)
+    blog_posts = BlogPost.objects.filter(is_active=True)[:3]
+    partners = Partner.objects.filter(is_active=True)
     
     # Get latest news
     try:
@@ -26,6 +28,8 @@ def home(request):
         'slider_items': slider_items,
         'latest_news': latest_news,
         'active_games': active_games,
+        'blog_posts': blog_posts,
+        'partners': partners,
     }
     return render(request, 'core/home.html', context)
 

@@ -84,3 +84,35 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"{self.subject} - {self.name}"
 
+
+class BlogPost(models.Model):
+    """Blog posts for home page"""
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    image = models.ImageField(upload_to='blog/')
+    order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['order', '-created_at']
+    
+    def __str__(self):
+        return self.title
+
+
+class Partner(models.Model):
+    """Partners/Collaborators logos"""
+    name = models.CharField(max_length=100)
+    logo = models.ImageField(upload_to='partners/')
+    website = models.URLField(blank=True)
+    order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['order', '-created_at']
+    
+    def __str__(self):
+        return self.name
+

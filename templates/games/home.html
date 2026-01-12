@@ -1,82 +1,212 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Legal Games - Legal Laboratory{% endblock %}
+{% block title %}{% trans "Legal Games" %} - {% trans "Legal Laboratory" %}{% endblock %}
 
 {% block extra_css %}
 <style>
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
     .games-hero {
         background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
         color: white;
-        padding: 3rem 2rem;
+        padding: 4rem 2rem;
         text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .games-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        opacity: 0.3;
+    }
+    
+    .games-hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+        animation: fadeInUp 0.8s ease;
+    }
+    
+    .games-hero p {
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 1;
+        animation: fadeInUp 0.8s ease 0.2s both;
     }
     
     .game-types-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        padding: 3rem 2rem;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2.5rem;
+        padding: 4rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .game-type-card {
         background: var(--white);
-        padding: 2rem;
-        border-radius: 15px;
-        box-shadow: var(--shadow);
-        transition: all 0.3s ease;
+        padding: 3rem;
+        border-radius: 24px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         text-decoration: none;
         color: inherit;
         display: block;
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(40px);
+        animation: fadeInUp 0.8s ease forwards;
+        border: 2px solid rgba(59, 130, 246, 0.1);
+    }
+    
+    .game-type-card:nth-child(1) { animation-delay: 0.1s; }
+    .game-type-card:nth-child(2) { animation-delay: 0.2s; }
+    .game-type-card:nth-child(3) { animation-delay: 0.3s; }
+    .game-type-card:nth-child(4) { animation-delay: 0.4s; }
+    .game-type-card:nth-child(5) { animation-delay: 0.5s; }
+    .game-type-card:nth-child(6) { animation-delay: 0.6s; }
+    
+    .game-type-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+        transition: left 0.5s;
+    }
+    
+    .game-type-card:hover::before {
+        left: 100%;
     }
     
     .game-type-card:hover {
-        transform: translateY(-10px);
-        box-shadow: var(--shadow-lg);
+        transform: translateY(-12px) scale(1.03);
+        box-shadow: 0 20px 60px rgba(30, 58, 138, 0.25);
+        border-color: var(--secondary-blue);
+        background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
     }
     
     .game-type-icon {
-        font-size: 4rem;
-        margin-bottom: 1rem;
+        font-size: 4.5rem;
+        margin-bottom: 1.5rem;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+    
+    .game-type-card:hover .game-type-icon {
+        transform: scale(1.1) rotate(5deg);
     }
     
     .game-type-card h3 {
-        color: var(--primary-blue);
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         margin-bottom: 1rem;
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+    
+    .game-type-card p {
+        color: var(--text-light);
+        line-height: 1.8;
+        font-size: 1.05rem;
     }
     
     .active-games {
-        padding: 3rem 2rem;
-        background: var(--bg-light);
+        padding: 4rem 2rem;
+        background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
     }
     
     .games-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin-top: 2rem;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2.5rem;
+        margin-top: 3rem;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .game-card {
         background: var(--white);
-        padding: 2rem;
-        border-radius: 15px;
-        box-shadow: var(--shadow);
-        transition: all 0.3s ease;
+        padding: 3rem;
+        border-radius: 24px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid rgba(59, 130, 246, 0.1);
+        opacity: 0;
+        transform: translateY(40px);
+        animation: fadeInUp 0.8s ease forwards;
     }
     
+    .game-card:nth-child(1) { animation-delay: 0.1s; }
+    .game-card:nth-child(2) { animation-delay: 0.2s; }
+    .game-card:nth-child(3) { animation-delay: 0.3s; }
+    
     .game-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-lg);
+        transform: translateY(-12px);
+        box-shadow: 0 20px 60px rgba(30, 58, 138, 0.25);
+        border-color: var(--secondary-blue);
+        background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
     }
     
     .game-card h3 {
-        color: var(--primary-blue);
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         margin-bottom: 1rem;
+        font-size: 1.6rem;
+        font-weight: 700;
     }
     
     .game-card p {
         color: var(--text-light);
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.8;
+    }
+    
+    @media (max-width: 1200px) {
+        .game-types-grid,
+        .games-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .game-types-grid,
+        .games-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .games-hero h1 {
+            font-size: 2rem;
+        }
     }
 </style>
 {% endblock %}
@@ -84,36 +214,41 @@
 {% block content %}
 <div class="games-hero">
     <div class="container">
-        <h1>Legal Games</h1>
-        <p>Learn through interactive gameplay and simulations</p>
+        <h1>{% trans "Legal Games" %}</h1>
+        <p>{% trans "Learn through interactive gameplay and simulations" %}</p>
     </div>
 </div>
 
 <div class="game-types-grid">
-    <div class="container">
-        {% for game_type in game_types %}
-        <a href="{% url 'games:game_type_detail' game_type.pk %}" class="game-type-card">
-            <div class="game-type-icon">{{ game_type.icon|default:"🎮" }}</div>
-            <h3>{{ game_type.name }}</h3>
-            <p>{{ game_type.description|truncatewords:20 }}</p>
-        </a>
-        {% endfor %}
+    {% for game_type in game_types %}
+    <a href="{% url 'games:game_type_detail' game_type.pk %}" class="game-type-card">
+        <div class="game-type-icon">{{ game_type.icon|default:"🎮" }}</div>
+        <h3>{{ game_type.name }}</h3>
+        <p>{{ game_type.description|truncatewords:25 }}</p>
+    </a>
+    {% empty %}
+    <div style="grid-column: 1/-1; text-align: center; color: var(--text-light);">
+        <p>{% trans "No game types available yet." %}</p>
     </div>
+    {% endfor %}
 </div>
 
 {% if active_games %}
 <div class="active-games">
     <div class="container">
-        <h2 style="color: var(--primary-blue); text-align: center; margin-bottom: 1rem;">Active Games</h2>
+        <div class="section-header">
+            <h2>{% trans "Active Games" %}</h2>
+            <p>{% trans "Start playing now and test your legal knowledge" %}</p>
+        </div>
         <div class="games-grid">
             {% for game in active_games %}
             <div class="game-card">
                 <h3>{{ game.title }}</h3>
                 <p>{{ game.description|truncatewords:30 }}</p>
                 {% if user.is_authenticated %}
-                <a href="{% url 'games:game_detail' game.pk %}" class="btn btn-primary">Play Now</a>
+                <a href="{% url 'games:game_detail' game.pk %}" class="btn btn-primary">{% trans "Play Now" %}</a>
                 {% else %}
-                <a href="{% url 'accounts:login' %}" class="btn btn-primary">Login to Play</a>
+                <a href="{% url 'accounts:login' %}" class="btn btn-primary">{% trans "Login to Play" %}</a>
                 {% endif %}
             </div>
             {% endfor %}
@@ -122,4 +257,3 @@
 </div>
 {% endif %}
 {% endblock %}
-

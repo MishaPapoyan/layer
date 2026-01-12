@@ -1,6 +1,6 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
-from .models import SliderItem, AboutSection, TeamMember, ContactInfo, ContactMessage
+from .models import SliderItem, AboutSection, TeamMember, ContactInfo, ContactMessage, BlogPost, Partner
 
 
 @admin.register(SliderItem)
@@ -38,4 +38,20 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_editable = ['is_read']
     readonly_fields = ['created_at']
     search_fields = ['name', 'email', 'subject', 'message']
+
+
+@admin.register(BlogPost)
+class BlogPostAdmin(TranslationAdmin):
+    list_display = ['title', 'order', 'is_active', 'created_at']
+    list_editable = ['order', 'is_active']
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['title', 'content']
+
+
+@admin.register(Partner)
+class PartnerAdmin(admin.ModelAdmin):
+    list_display = ['name', 'order', 'is_active', 'created_at']
+    list_editable = ['order', 'is_active']
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['name']
 
