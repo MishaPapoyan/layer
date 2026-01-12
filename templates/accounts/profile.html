@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - Legal Laboratory{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-hero {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+    }
+    
+    .profile-content {
+        padding: 3rem 2rem;
+    }
+    
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 2rem;
+    }
+    
+    .profile-sidebar {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        height: fit-content;
+    }
+    
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 1rem;
+        display: block;
+        border: 4px solid var(--secondary-blue);
+    }
+    
+    .profile-sidebar h3 {
+        color: var(--primary-blue);
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .profile-info {
+        text-align: center;
+        color: var(--text-light);
+    }
+    
+    .profile-form-card {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+    }
+    
+    .profile-form-card h2 {
+        color: var(--primary-blue);
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+        font-weight: 600;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--secondary-blue);
+    }
+    
+    @media (max-width: 768px) {
+        .profile-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-hero">
+    <div class="container">
+        <h1>My Profile</h1>
+        <p>Manage your account information</p>
+    </div>
+</div>
+
+<div class="profile-content">
+    <div class="container">
+        <div class="profile-grid">
+            <div class="profile-sidebar">
+                {% if user.profile_image and user.profile_image.url %}
+                <img src="{{ user.profile_image.url }}" alt="{{ user.username }}" class="profile-image">
+                {% else %}
+                <div style="width: 150px; height: 150px; border-radius: 50%; background: var(--light-blue); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--primary-blue);">👤</div>
+                {% endif %}
+                <h3>{{ user.get_full_name|default:user.username }}</h3>
+                <div class="profile-info">
+                    <p><strong>Account Type:</strong> {{ user.get_account_type_display }}</p>
+                    <p><strong>Total Points:</strong> {{ user.total_points }}</p>
+                    <p><strong>Member Since:</strong> {{ user.date_joined|date:"M Y" }}</p>
+                </div>
+            </div>
+            
+            <div class="profile-form-card">
+                <h2>Edit Profile</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="{{ form.first_name.id_for_label }}">First Name</label>
+                        {{ form.first_name }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+                        {{ form.last_name }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.email.id_for_label }}">Email</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.phone.id_for_label }}">Phone</label>
+                        {{ form.phone }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.account_type.id_for_label }}">Account Type</label>
+                        {{ form.account_type }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.profile_image.id_for_label }}">Profile Image</label>
+                        {{ form.profile_image }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.bio.id_for_label }}">Bio</label>
+                        {{ form.bio }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

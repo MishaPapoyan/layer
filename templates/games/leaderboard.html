@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Leaderboard - Legal Laboratory{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 2rem;">
+    <h1 style="color: var(--primary-blue); text-align: center; margin-bottom: 2rem;">Leaderboard</h1>
+    
+    <div style="background: var(--white); border-radius: 15px; box-shadow: var(--shadow); overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead style="background: var(--primary-blue); color: white;">
+                <tr>
+                    <th style="padding: 1rem; text-align: left;">Rank</th>
+                    <th style="padding: 1rem; text-align: left;">User</th>
+                    <th style="padding: 1rem; text-align: right;">Points</th>
+                    <th style="padding: 1rem; text-align: right;">Games</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td style="padding: 1rem; font-weight: bold; color: var(--primary-blue);">#{{ entry.rank }}</td>
+                    <td style="padding: 1rem;">{{ entry.user.username }}</td>
+                    <td style="padding: 1rem; text-align: right; font-weight: 600; color: var(--secondary-blue);">{{ entry.total_points }}</td>
+                    <td style="padding: 1rem; text-align: right;">{{ entry.games_completed }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-light);">No leaderboard entries yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

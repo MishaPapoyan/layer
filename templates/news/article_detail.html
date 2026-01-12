@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.title }} - Legal Laboratory{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 2rem;">
+    <div style="max-width: 900px; margin: 0 auto;">
+        <h1 style="color: var(--primary-blue); margin-bottom: 1rem;">{{ article.title }}</h1>
+        <p style="color: var(--text-light); margin-bottom: 2rem;">{{ article.created_at|date:"F d, Y" }} • {{ article.views }} views</p>
+        
+        {% if article.image and article.image.url %}
+        <img src="{{ article.image.url }}" alt="{{ article.title }}" style="width: 100%; border-radius: 15px; margin-bottom: 2rem;">
+        {% endif %}
+        
+        <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow);">
+            <div style="line-height: 1.8;">
+                {{ article.content|linebreaks }}
+            </div>
+        </div>
+        
+        {% if related %}
+        <h2 style="color: var(--primary-blue); margin-top: 3rem; margin-bottom: 1rem;">Related Articles</h2>
+        <div style="display: grid; gap: 1rem;">
+            {% for rel_article in related %}
+            <div style="background: var(--white); padding: 1.5rem; border-radius: 10px; box-shadow: var(--shadow);">
+                <h3 style="color: var(--primary-blue); margin-bottom: 0.5rem;"><a href="{% url 'news:article_detail' rel_article.slug %}" style="text-decoration: none; color: inherit;">{{ rel_article.title }}</a></h3>
+                <p style="color: var(--text-light); font-size: 0.9rem;">{{ rel_article.created_at|date:"M d, Y" }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

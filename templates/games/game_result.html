@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Game Result - Legal Laboratory{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 2rem; text-align: center;">
+    <h1 style="color: var(--primary-blue); margin-bottom: 1rem;">Game Completed!</h1>
+    
+    <div style="background: var(--white); padding: 3rem; border-radius: 15px; box-shadow: var(--shadow-lg); max-width: 600px; margin: 0 auto;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">Your Score</h2>
+        <div style="font-size: 3rem; font-weight: bold; color: var(--secondary-blue); margin-bottom: 2rem;">
+            {{ session.score }} / {{ session.total_points }}
+        </div>
+        <p style="color: var(--text-light); margin-bottom: 2rem;">
+            You earned <strong>{{ session.score }}</strong> points!
+        </p>
+        
+        <div style="margin-top: 2rem;">
+            <a href="{% url 'games:home' %}" class="btn btn-primary">Play More Games</a>
+            <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline" style="color: var(--primary-blue); border-color: var(--primary-blue);">Go to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

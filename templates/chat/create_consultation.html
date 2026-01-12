@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Request Consultation - Legal Laboratory{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 2rem;">
+    <h1 style="color: var(--primary-blue); margin-bottom: 2rem;">Request Legal Consultation</h1>
+    
+    <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); max-width: 600px; margin: 0 auto;">
+        <form method="post">
+            {% csrf_token %}
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ form.subject.label }}</label>
+                {{ form.subject }}
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ form.description.label }}</label>
+                {{ form.description }}
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ form.preferred_date.label }}</label>
+                {{ form.preferred_date }}
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

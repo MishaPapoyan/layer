@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Playing: {{ session.game.title }} - Legal Laboratory{% endblock %}
+
+{% block extra_css %}
+<style>
+    .game-container {
+        padding: 3rem 2rem;
+    }
+    
+    .progress-bar {
+        background: var(--light-blue);
+        height: 30px;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        background: linear-gradient(90deg, var(--secondary-blue) 0%, var(--primary-blue) 100%);
+        height: 100%;
+        transition: width 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+    }
+    
+    .question-card {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 2rem;
+    }
+    
+    .question-card h2 {
+        color: var(--primary-blue);
+        margin-bottom: 1.5rem;
+    }
+    
+    .answer-options {
+        display: grid;
+        gap: 1rem;
+    }
+    
+    .answer-option {
+        background: var(--bg-light);
+        padding: 1rem;
+        border-radius: 8px;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .answer-option:hover {
+        border-color: var(--secondary-blue);
+        background: var(--light-blue);
+    }
+    
+    .answer-option input[type="radio"] {
+        margin-right: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="game-container">
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ progress }}%;">{{ progress|floatformat:0 }}%</div>
+        </div>
+        
+        <div class="question-card">
+            <h2>Question {{ current_question.order }}</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.8;">{{ current_question.question_text }}</p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="question_id" value="{{ current_question.pk }}">
+                <div class="answer-options">
+                    {% for answer in current_question.answers.all %}
+                    <label class="answer-option">
+                        <input type="radio" name="answer_id" value="{{ answer.pk }}" required>
+                        {{ answer.answer_text }}
+                    </label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 1.5rem;">Submit Answer</button>
+            </form>
+        </div>
+        
+        <div style="background: var(--light-blue); padding: 1rem; border-radius: 10px; text-align: center;">
+            <strong>Current Score: {{ session.score }} / {{ session.total_points }}</strong>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

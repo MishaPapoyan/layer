@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat & Consultation - Legal Laboratory{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 2rem;">
+    <h1 style="color: var(--primary-blue); margin-bottom: 2rem;">Chat & Consultation</h1>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+        <a href="{% url 'chat:create_consultation' %}" class="btn btn-primary" style="padding: 2rem; text-align: center; display: block;">
+            <h3>📅 Request Consultation</h3>
+            <p>Schedule a consultation with a legal professional</p>
+        </a>
+        <a href="{% url 'chat:consultations' %}" class="btn btn-outline" style="padding: 2rem; text-align: center; display: block; color: var(--primary-blue); border-color: var(--primary-blue);">
+            <h3>📋 My Consultations</h3>
+            <p>View your consultation requests</p>
+        </a>
+    </div>
+    
+    {% if rooms %}
+    <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">Active Chat Rooms</h2>
+    <div style="display: grid; gap: 1rem;">
+        {% for room in rooms %}
+        <div style="background: var(--white); padding: 1.5rem; border-radius: 10px; box-shadow: var(--shadow);">
+            <a href="{% url 'chat:chat_room' room.pk %}" style="text-decoration: none; color: inherit;">
+                <h3 style="color: var(--primary-blue); margin-bottom: 0.5rem;">{{ room.subject }}</h3>
+                <p style="color: var(--text-light);">{{ room.created_at|date:"M d, Y" }}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

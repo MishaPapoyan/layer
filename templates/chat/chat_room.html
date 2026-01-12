@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ room.subject }} - Legal Laboratory{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 2rem;">
+    <h1 style="color: var(--primary-blue); margin-bottom: 2rem;">{{ room.subject }}</h1>
+    
+    <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); max-width: 800px; margin: 0 auto; max-height: 500px; overflow-y: auto; margin-bottom: 2rem;">
+        {% for message in messages %}
+        <div style="margin-bottom: 1.5rem; {% if message.sender == user %}text-align: right;{% endif %}">
+            <div style="display: inline-block; background: {% if message.sender == user %}var(--secondary-blue){% else %}var(--light-blue){% endif %}; color: {% if message.sender == user %}white{% else %}var(--text-dark){% endif %}; padding: 1rem; border-radius: 10px; max-width: 70%;">
+                <strong>{{ message.sender.username }}</strong>
+                <p style="margin: 0.5rem 0 0 0;">{{ message.message }}</p>
+                <small style="opacity: 0.7;">{{ message.created_at|date:"M d, H:i" }}</small>
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; color: var(--text-light);">No messages yet. Start the conversation!</p>
+        {% endfor %}
+    </div>
+    
+    <div style="max-width: 800px; margin: 0 auto;">
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 1rem;">
+                <textarea name="message" placeholder="Type your message..." required class="form-control" style="flex: 1; min-height: 60px; padding: 0.75rem 1rem; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 1rem; resize: vertical; background: linear-gradient(to bottom, #ffffff 0%, #fafbfc 100%); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); transition: all 0.3s ease;" onfocus="this.style.borderColor='var(--secondary-blue)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.15), 0 0 0 4px rgba(59, 130, 246, 0.1)'; this.style.transform='translateY(-2px)'" onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='0 2px 8px rgba(0, 0, 0, 0.05)'; this.style.transform='translateY(0)'"></textarea>
+                <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

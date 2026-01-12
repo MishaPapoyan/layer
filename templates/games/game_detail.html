@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ game.title }} - Legal Laboratory{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 2rem;">
+    <h1 style="color: var(--primary-blue); margin-bottom: 1rem;">{{ game.title }}</h1>
+    <p style="color: var(--text-light); margin-bottom: 2rem;">{{ game.description }}</p>
+    
+    <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); margin-bottom: 2rem;">
+        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">Scenario</h2>
+        <p style="line-height: 1.8;">{{ game.scenario|linebreaks }}</p>
+    </div>
+    
+    {% if user.is_authenticated %}
+        {% if active_session %}
+        <a href="{% url 'games:play_game' active_session.pk %}" class="btn btn-primary">Continue Game</a>
+        {% else %}
+        <a href="{% url 'games:start_game' game.pk %}" class="btn btn-primary">Start Game</a>
+        {% endif %}
+    {% else %}
+    <p style="color: var(--text-light); margin-bottom: 1rem;">Please <a href="{% url 'accounts:login' %}">login</a> to play this game.</p>
+    {% endif %}
+</div>
+{% endblock %}
+

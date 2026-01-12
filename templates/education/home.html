@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Legal Education - Legal Laboratory{% endblock %}
+
+{% block extra_css %}
+<style>
+    .education-hero {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+    }
+    
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2.5rem;
+        padding: 4rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .category-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        padding: 3rem 2rem;
+        border-radius: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 350px;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid transparent;
+    }
+    
+    .category-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: var(--gradient-primary);
+        transform: scaleX(0);
+        transition: transform 0.4s ease;
+    }
+    
+    .category-card:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .category-card:hover {
+        transform: translateY(-15px) scale(1.03);
+        box-shadow: 0 20px 50px rgba(30, 58, 138, 0.2);
+        border-color: var(--secondary-blue);
+    }
+    
+    .category-icon {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        transition: transform 0.4s ease;
+        filter: drop-shadow(0 5px 15px rgba(59, 130, 246, 0.3));
+    }
+    
+    .category-card:hover .category-icon {
+        transform: scale(1.2) rotate(5deg);
+    }
+    
+    .category-card h3 {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+    
+    .category-card p {
+        color: var(--text-light);
+        line-height: 1.8;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .category-card::after {
+        content: '→';
+        position: absolute;
+        bottom: 2rem;
+        right: 2rem;
+        font-size: 1.5rem;
+        color: var(--secondary-blue);
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.4s ease;
+    }
+    
+    .category-card:hover::after {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    @media (max-width: 1200px) {
+        .categories-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .categories-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="education-hero">
+    <div class="container">
+        <h1>Legal Education</h1>
+        <p>Comprehensive legal knowledge and learning resources</p>
+    </div>
+</div>
+
+<div class="categories-grid">
+    <div class="container">
+        {% for category in categories %}
+        <a href="{% url 'education:category_detail' category.pk %}" class="category-card">
+            <div class="category-icon">{{ category.icon|default:"📚" }}</div>
+            <h3>{{ category.name }}</h3>
+            <p>{{ category.description|truncatewords:20 }}</p>
+        </a>
+        {% empty %}
+        <p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No categories available yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

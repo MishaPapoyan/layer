@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}My Consultations - Legal Laboratory{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 2rem;">
+    <h1 style="color: var(--primary-blue); margin-bottom: 2rem;">My Consultations</h1>
+    
+    <div style="display: grid; gap: 1.5rem;">
+        {% for consultation in consultations %}
+        <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow);">
+            <h3 style="color: var(--primary-blue); margin-bottom: 0.5rem;">{{ consultation.subject }}</h3>
+            <p style="color: var(--text-light); margin-bottom: 1rem;">{{ consultation.description|truncatewords:30 }}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span style="background: var(--light-blue); color: var(--primary-blue); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.9rem;">{{ consultation.get_status_display }}</span>
+                    <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 0.5rem;">Preferred: {{ consultation.preferred_date|date:"M d, Y H:i" }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; color: var(--text-light);">No consultations yet. <a href="{% url 'chat:create_consultation' %}">Request one now</a>.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

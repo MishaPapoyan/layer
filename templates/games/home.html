@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Legal Games - Legal Laboratory{% endblock %}
+
+{% block extra_css %}
+<style>
+    .games-hero {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+    }
+    
+    .game-types-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 3rem 2rem;
+    }
+    
+    .game-type-card {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    
+    .game-type-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .game-type-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+    
+    .game-type-card h3 {
+        color: var(--primary-blue);
+        margin-bottom: 1rem;
+    }
+    
+    .active-games {
+        padding: 3rem 2rem;
+        background: var(--bg-light);
+    }
+    
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .game-card {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+    }
+    
+    .game-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .game-card h3 {
+        color: var(--primary-blue);
+        margin-bottom: 1rem;
+    }
+    
+    .game-card p {
+        color: var(--text-light);
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="games-hero">
+    <div class="container">
+        <h1>Legal Games</h1>
+        <p>Learn through interactive gameplay and simulations</p>
+    </div>
+</div>
+
+<div class="game-types-grid">
+    <div class="container">
+        {% for game_type in game_types %}
+        <a href="{% url 'games:game_type_detail' game_type.pk %}" class="game-type-card">
+            <div class="game-type-icon">{{ game_type.icon|default:"🎮" }}</div>
+            <h3>{{ game_type.name }}</h3>
+            <p>{{ game_type.description|truncatewords:20 }}</p>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% if active_games %}
+<div class="active-games">
+    <div class="container">
+        <h2 style="color: var(--primary-blue); text-align: center; margin-bottom: 1rem;">Active Games</h2>
+        <div class="games-grid">
+            {% for game in active_games %}
+            <div class="game-card">
+                <h3>{{ game.title }}</h3>
+                <p>{{ game.description|truncatewords:30 }}</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'games:game_detail' game.pk %}" class="btn btn-primary">Play Now</a>
+                {% else %}
+                <a href="{% url 'accounts:login' %}" class="btn btn-primary">Login to Play</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

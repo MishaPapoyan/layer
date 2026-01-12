@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Home" %} - {% trans "Legal Laboratory" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-slider {
+        position: relative;
+        height: 600px;
+        overflow: hidden;
+        margin-bottom: 4rem;
+    }
+    
+    .slide {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .slide.active {
+        opacity: 1;
+    }
+    
+    .slide-content {
+        text-align: center;
+        color: white;
+        background: rgba(30, 58, 138, 0.9);
+        backdrop-filter: blur(10px);
+        padding: 3rem;
+        border-radius: 20px;
+        max-width: 800px;
+        margin: 0 2rem;
+        animation: fadeInUp 0.8s ease;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .slide-content h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .slide-content p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .slide-indicators {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .indicator.active {
+        background: white;
+        transform: scale(1.2);
+    }
+    
+    .cta-section {
+        text-align: center;
+        padding: 5rem 2rem;
+        background: linear-gradient(135deg, rgba(219, 234, 254, 0.5) 0%, rgba(255, 255, 255, 1) 100%);
+        position: relative;
+    }
+    
+    .cta-section::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--secondary-blue), transparent);
+    }
+    
+    .cta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .cta-card {
+        background: var(--white);
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: var(--shadow-lg);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .cta-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+        transition: left 0.5s;
+    }
+    
+    .cta-card:hover::before {
+        left: 100%;
+    }
+    
+    .cta-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 25px 50px -12px rgba(30, 58, 138, 0.25);
+        border: 2px solid var(--secondary-blue);
+    }
+    
+    .cta-card h3 {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+    
+    .cta-card p {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+    }
+    
+    .intro-section {
+        padding: 5rem 2rem;
+        text-align: center;
+        background: linear-gradient(135deg, rgba(219, 234, 254, 0.3) 0%, rgba(255, 255, 255, 1) 100%);
+        position: relative;
+    }
+    
+    .intro-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue), var(--accent-blue));
+    }
+    
+    .intro-section h2 {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    
+    .intro-section p {
+        font-size: 1.1rem;
+        color: var(--text-light);
+        max-width: 800px;
+        margin: 0 auto 2rem;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .slide-content h1 {
+            font-size: 2rem;
+        }
+        
+        .slide-content {
+            padding: 2rem;
+        }
+        
+        .hero-slider {
+            height: 400px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Slider -->
+<div class="hero-slider">
+    {% for item in slider_items %}
+    <div class="slide {% if forloop.first %}active{% endif %}" 
+         {% if item.image %}style="background-image: url('{{ item.image.url }}');"{% else %}style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);"{% endif %}>
+        <div class="slide-content">
+            <h1>{{ item.title }}</h1>
+            <p>{{ item.description }}</p>
+            <a href="{{ item.button_link }}" class="btn btn-primary">{{ item.button_text }}</a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="slide active" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);">
+        <div class="slide-content">
+            <h1>Welcome to Legal Laboratory</h1>
+            <p>Your comprehensive platform for legal education, practical case analysis, and professional development.</p>
+            <a href="{% url 'accounts:register' %}" class="btn btn-primary">Get Started</a>
+        </div>
+    </div>
+    {% endfor %}
+    
+    <div class="slide-indicators">
+        {% for item in slider_items %}
+        <div class="indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Introduction Section -->
+<div class="intro-section fade-in">
+    <div class="container">
+        <h2>Welcome to Legal Laboratory</h2>
+        <p style="font-size: 1.2rem; color: var(--text-light); max-width: 900px; margin: 2rem auto; line-height: 1.8;">We provide a comprehensive platform for legal education, practical case analysis, gamified learning, and professional interaction. Whether you're a student, investigator, lawyer, or prosecutor, our platform offers the tools and resources you need to excel in your legal career.</p>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="cta-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Get Started Today</h2>
+            <p>Choose your path to legal excellence</p>
+        </div>
+        
+        <div class="cta-grid">
+            <div class="cta-card">
+                <h3>📚 Start Learning</h3>
+                <p>Access comprehensive legal education materials, articles, and exam preparation resources.</p>
+                <a href="{% url 'education:home' %}" class="btn btn-primary">Explore Education</a>
+            </div>
+            
+            <div class="cta-card">
+                <h3>🎮 Play & Learn</h3>
+                <p>Engage with interactive legal games, simulations, and quizzes to test your knowledge.</p>
+                <a href="{% url 'games:home' %}" class="btn btn-primary">Play Games</a>
+            </div>
+            
+            <div class="cta-card">
+                <h3>⚖️ Get Consultation</h3>
+                <p>Connect with legal professionals for advice, consultations, and expert guidance.</p>
+                <a href="{% url 'chat:home' %}" class="btn btn-primary">Chat Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Slider functionality
+    const slides = document.querySelectorAll('.slide');
+    const indicators = document.querySelectorAll('.indicator');
+    let currentSlide = 0;
+    
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+        });
+        indicators.forEach((indicator, i) => {
+            indicator.classList.toggle('active', i === index);
+        });
+    }
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+    
+    // Auto-advance slides
+    setInterval(nextSlide, 5000);
+    
+    // Indicator clicks
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            currentSlide = index;
+            showSlide(currentSlide);
+        });
+    });
+</script>
+{% endblock %}
+

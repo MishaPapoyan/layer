@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+
+{% block title %}News & Blog - Legal Laboratory{% endblock %}
+
+{% block extra_css %}
+<style>
+    .news-hero {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .news-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        opacity: 0.3;
+    }
+    
+    .news-hero h1 {
+        position: relative;
+        z-index: 1;
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .news-hero p {
+        position: relative;
+        z-index: 1;
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+    
+    .news-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2.5rem;
+        padding: 4rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .news-card {
+        background: var(--white);
+        border-radius: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        aspect-ratio: 1;
+        border: 2px solid transparent;
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+        animation: fadeInScale 0.6s ease forwards;
+    }
+    
+    .news-card:nth-child(1) { animation-delay: 0.1s; }
+    .news-card:nth-child(2) { animation-delay: 0.2s; }
+    .news-card:nth-child(3) { animation-delay: 0.3s; }
+    .news-card:nth-child(4) { animation-delay: 0.4s; }
+    .news-card:nth-child(5) { animation-delay: 0.5s; }
+    .news-card:nth-child(6) { animation-delay: 0.6s; }
+    
+    @keyframes fadeInScale {
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    .news-card:hover {
+        transform: translateY(-15px) scale(1.05);
+        box-shadow: 0 25px 50px rgba(30, 58, 138, 0.25);
+        border-color: var(--secondary-blue);
+    }
+    
+    .news-card-image {
+        width: 100%;
+        height: 50%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+    
+    .news-card:hover .news-card-image {
+        transform: scale(1.1);
+    }
+    
+    .news-card-placeholder {
+        width: 100%;
+        height: 50%;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: white;
+    }
+    
+    .news-card-content {
+        padding: 2rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .news-card-title {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+        transition: all 0.3s ease;
+    }
+    
+    .news-card:hover .news-card-title {
+        transform: translateX(5px);
+    }
+    
+    .news-card-excerpt {
+        color: var(--text-light);
+        line-height: 1.8;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        flex: 1;
+    }
+    
+    .news-card-meta {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .news-card-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.75rem;
+        background: var(--gradient-secondary);
+        color: white;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+    
+    .news-card-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    
+    .news-card-cta::after {
+        content: '→';
+        transition: transform 0.3s ease;
+    }
+    
+    .news-card:hover .news-card-cta::after {
+        transform: translateX(5px);
+    }
+    
+    .featured-section {
+        padding: 4rem 2rem;
+        background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
+    }
+    
+    @media (max-width: 1200px) {
+        .news-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .news-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        .news-hero h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="news-hero">
+    <div class="container">
+        <h1>News & Blog</h1>
+        <p>Stay updated with the latest legal news, legislative updates, and professional insights</p>
+    </div>
+</div>
+
+<div class="featured-section">
+    <div class="container">
+        {% if featured %}
+        <div class="section-header">
+            <h2>Featured Articles</h2>
+            <p>Top stories and important updates</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="news-grid">
+    {% for article in featured %}
+    <div class="news-card">
+        {% if article.image and article.image.url %}
+        <img src="{{ article.image.url }}" alt="{{ article.title }}" class="news-card-image">
+        {% else %}
+        <div class="news-card-placeholder">📰</div>
+        {% endif %}
+        <div class="news-card-content">
+            <div>
+                <h3 class="news-card-title">
+                    <a href="{% url 'news:article_detail' article.slug %}" style="text-decoration: none; color: inherit;">{{ article.title }}</a>
+                </h3>
+                <p class="news-card-excerpt">{{ article.excerpt|default:article.content|truncatewords:25 }}</p>
+                <div class="news-card-meta">
+                    <span>📅 {{ article.created_at|date:"M d, Y" }}</span>
+                    <span>👁️ {{ article.views }}</span>
+                </div>
+            </div>
+            <a href="{% url 'news:article_detail' article.slug %}" class="news-card-cta">Read Article</a>
+        </div>
+    </div>
+    {% endfor %}
+    
+    {% for article in latest %}
+    {% if article not in featured %}
+    <div class="news-card">
+        {% if article.image and article.image.url %}
+        <img src="{{ article.image.url }}" alt="{{ article.title }}" class="news-card-image">
+        {% else %}
+        <div class="news-card-placeholder">📰</div>
+        {% endif %}
+        <div class="news-card-content">
+            <div>
+                <h3 class="news-card-title">
+                    <a href="{% url 'news:article_detail' article.slug %}" style="text-decoration: none; color: inherit;">{{ article.title }}</a>
+                </h3>
+                <p class="news-card-excerpt">{{ article.excerpt|default:article.content|truncatewords:25 }}</p>
+                <div class="news-card-meta">
+                    <span>📅 {{ article.created_at|date:"M d, Y" }}</span>
+                    <span>👁️ {{ article.views }}</span>
+                </div>
+            </div>
+            <a href="{% url 'news:article_detail' article.slug %}" class="news-card-cta">Read Article</a>
+        </div>
+    </div>
+    {% endif %}
+    {% empty %}
+    {% if not featured %}
+    <p style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 4rem 2rem;">No news articles available yet.</p>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

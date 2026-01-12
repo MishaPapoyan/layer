@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }} - Legal Laboratory{% endblock %}
+
+{% block extra_css %}
+<style>
+    .category-hero {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+        color: white;
+        padding: 3rem 2rem;
+    }
+    
+    .articles-section, .materials-section {
+        padding: 4rem 2rem;
+        background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
+    }
+    
+    .articles-grid {
+        display: grid;
+        gap: 2.5rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .article-card, .material-card {
+        background: var(--white);
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        border: 2px solid transparent;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.6s ease forwards;
+    }
+    
+    .article-card:nth-child(1) { animation-delay: 0.1s; }
+    .article-card:nth-child(2) { animation-delay: 0.2s; }
+    .article-card:nth-child(3) { animation-delay: 0.3s; }
+    .article-card:nth-child(4) { animation-delay: 0.4s; }
+    
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .article-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+        transition: left 0.6s;
+    }
+    
+    .article-card:hover::before {
+        left: 100%;
+    }
+    
+    .article-card:hover, .material-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(30, 58, 138, 0.15);
+        border-color: var(--secondary-blue);
+    }
+    
+    .article-card a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    
+    .article-card h3 {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+    
+    .article-card:hover h3 {
+        transform: translateX(5px);
+    }
+    
+    .article-meta {
+        color: var(--text-light);
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .article-meta::before {
+        content: '📅';
+        font-size: 1.2rem;
+    }
+    
+    .article-card p {
+        color: var(--text-dark);
+        line-height: 1.8;
+        font-size: 1.05rem;
+        margin-top: 1rem;
+    }
+    
+    .read-more {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--secondary-blue);
+        font-weight: 600;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .article-card:hover .read-more {
+        transform: translateX(5px);
+        color: var(--primary-blue);
+    }
+    
+    .read-more::after {
+        content: '→';
+        transition: transform 0.3s ease;
+    }
+    
+    .article-card:hover .read-more::after {
+        transform: translateX(5px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="category-hero">
+    <div class="container">
+        <h1>{{ category.name }}</h1>
+        <p>{{ category.description }}</p>
+    </div>
+</div>
+
+<div class="articles-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Articles</h2>
+            <p>Explore our comprehensive legal education articles</p>
+        </div>
+        <div class="articles-grid">
+            {% for article in articles %}
+            <div class="article-card">
+                <a href="{% url 'education:article_detail' article.slug %}">
+                    <h3>{{ article.title }}</h3>
+                    <div class="article-meta">
+                        {% if article.author %}<span>{{ article.author }}</span>{% endif %}
+                        <span>{{ article.created_at|date:"M d, Y" }}</span>
+                        <span>👁️ {{ article.views }} views</span>
+                    </div>
+                    <p>{{ article.excerpt|default:article.content|truncatewords:40 }}</p>
+                    <span class="read-more">Read More</span>
+                </a>
+            </div>
+            {% empty %}
+            <p style="color: var(--text-light); text-align: center; grid-column: 1/-1;">No articles available yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% if exam_materials %}
+<div class="materials-section">
+    <div class="container">
+        <h2 style="color: var(--primary-blue); margin-bottom: 2rem;">Exam Materials</h2>
+        {% for material in exam_materials %}
+        <div class="material-card">
+            <h3>{{ material.title }}</h3>
+            <p>{{ material.description }}</p>
+            {% if material.file and material.file.url %}
+            <a href="{{ material.file.url }}" class="btn btn-primary" download>Download</a>
+            {% endif %}
+            {% if material.link %}
+            <a href="{{ material.link }}" class="btn btn-primary" target="_blank">View Link</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

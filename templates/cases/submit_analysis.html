@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Submit Analysis - Legal Laboratory{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 2rem;">
+    <h1 style="color: var(--primary-blue); margin-bottom: 2rem;">Submit Case Analysis</h1>
+    
+    <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); max-width: 800px; margin: 0 auto;">
+        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">{{ case.title }}</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ form.hypothesis.label }}</label>
+                {{ form.hypothesis }}
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ form.legal_qualification.label }}</label>
+                {{ form.legal_qualification }}
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ form.conclusion.label }}</label>
+                {{ form.conclusion }}
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Analysis</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

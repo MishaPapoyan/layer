@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - Legal Laboratory{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, var(--light-blue) 0%, var(--white) 100%);
+    }
+    
+    .auth-card {
+        background: var(--white);
+        padding: 3rem;
+        border-radius: 15px;
+        box-shadow: var(--shadow-lg);
+        max-width: 500px;
+        width: 100%;
+    }
+    
+    .auth-card h1 {
+        color: var(--primary-blue);
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .auth-card p {
+        text-align: center;
+        color: var(--text-light);
+        margin-bottom: 2rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+        font-weight: 600;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--secondary-blue);
+    }
+    
+    .btn-block {
+        width: 100%;
+        margin-top: 1rem;
+    }
+    
+    .auth-links {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+    }
+    
+    .auth-links a {
+        color: var(--secondary-blue);
+        text-decoration: none;
+    }
+    
+    .auth-links a:hover {
+        text-decoration: underline;
+    }
+    
+    .helptext {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        margin-top: 0.25rem;
+    }
+    
+    .errorlist {
+        color: #ef4444;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        list-style: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h1>Create Account</h1>
+        <p>Join Legal Laboratory today</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                {{ form.username }}
+                {% if form.username.help_text %}
+                <span class="helptext">{{ form.username.help_text }}</span>
+                {% endif %}
+                {% if form.username.errors %}
+                <ul class="errorlist">{{ form.username.errors }}</ul>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <ul class="errorlist">{{ form.email.errors }}</ul>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.account_type.id_for_label }}">Account Type</label>
+                {{ form.account_type }}
+                {% if form.account_type.errors %}
+                <ul class="errorlist">{{ form.account_type.errors }}</ul>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Password</label>
+                {{ form.password1 }}
+                {% if form.password1.help_text %}
+                <span class="helptext">{{ form.password1.help_text }}</span>
+                {% endif %}
+                {% if form.password1.errors %}
+                <ul class="errorlist">{{ form.password1.errors }}</ul>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                {{ form.password2 }}
+                {% if form.password2.help_text %}
+                <span class="helptext">{{ form.password2.help_text }}</span>
+                {% endif %}
+                {% if form.password2.errors %}
+                <ul class="errorlist">{{ form.password2.errors }}</ul>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
+        
+        <div class="auth-links">
+            <p>Already have an account? <a href="{% url 'accounts:login' %}">Login here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

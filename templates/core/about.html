@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - Legal Laboratory{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+    
+    .about-hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .about-sections {
+        padding: 4rem 2rem;
+    }
+    
+    .about-section {
+        margin-bottom: 4rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: center;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease;
+    }
+    
+    .about-section.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .about-section:nth-child(even) {
+        direction: rtl;
+    }
+    
+    .about-section:nth-child(even) > * {
+        direction: ltr;
+    }
+    
+    .about-section img {
+        width: 100%;
+        border-radius: 15px;
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .about-content h2 {
+        color: var(--primary-blue);
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .about-content p {
+        color: var(--text-light);
+        line-height: 1.8;
+        font-size: 1.1rem;
+    }
+    
+    .target-audience {
+        background: var(--light-blue);
+        padding: 4rem 2rem;
+    }
+    
+    .audience-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .audience-card {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+    }
+    
+    .audience-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .audience-card h3 {
+        color: var(--primary-blue);
+        margin-bottom: 1rem;
+    }
+    
+    .team-section {
+        padding: 4rem 2rem;
+        background: var(--white);
+    }
+    
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .team-card {
+        background: var(--bg-light);
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .team-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .team-card img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+        border: 4px solid var(--secondary-blue);
+    }
+    
+    .team-card h3 {
+        color: var(--primary-blue);
+        margin-bottom: 0.5rem;
+    }
+    
+    .team-card .position {
+        color: var(--text-light);
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+        .about-section {
+            grid-template-columns: 1fr;
+        }
+        
+        .about-section:nth-child(even) {
+            direction: ltr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-hero">
+    <div class="container">
+        <h1>About Legal Laboratory</h1>
+        <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto;">Dedicated to advancing legal education through innovative technology and practical learning experiences.</p>
+    </div>
+</div>
+
+<div class="about-sections">
+    <div class="container">
+        {% for section in sections %}
+        <div class="about-section">
+            <div class="about-image">
+                {% if section.image and section.image.url %}
+                <img src="{{ section.image.url }}" alt="{{ section.title }}">
+                {% else %}
+                <div style="background: var(--light-blue); height: 300px; border-radius: 15px; display: flex; align-items: center; justify-content: center; color: var(--primary-blue); font-size: 3rem;">⚖️</div>
+                {% endif %}
+            </div>
+            <div class="about-content">
+                <h2>{{ section.title }}</h2>
+                <p>{{ section.content|linebreaks }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <div class="about-section">
+            <div class="about-content">
+                <h2>Our Mission</h2>
+                <p>Legal Laboratory is committed to providing comprehensive legal education through innovative platforms that combine theoretical knowledge with practical application. We aim to bridge the gap between academic learning and real-world legal practice.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="target-audience">
+    <div class="container">
+        <h2 style="text-align: center; color: var(--primary-blue); margin-bottom: 1rem;">Our Target Audience</h2>
+        <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;">We serve professionals and students across the legal spectrum</p>
+        
+        <div class="audience-grid">
+            <div class="audience-card">
+                <h3>👨‍🎓 Students</h3>
+                <p>Comprehensive learning materials, exam preparation, and interactive games to enhance your legal knowledge.</p>
+            </div>
+            
+            <div class="audience-card">
+                <h3>🕵️ Investigators</h3>
+                <p>Practical case analysis tools and scenarios to develop investigative skills and legal reasoning.</p>
+            </div>
+            
+            <div class="audience-card">
+                <h3>⚖️ Lawyers</h3>
+                <p>Professional development resources, case studies, and networking opportunities with peers.</p>
+            </div>
+            
+            <div class="audience-card">
+                <h3>👨‍⚖️ Prosecutors</h3>
+                <p>Advanced case analysis, legal procedure training, and courtroom simulation exercises.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if team_members %}
+<div class="team-section">
+    <div class="container">
+        <h2 style="text-align: center; color: var(--primary-blue); margin-bottom: 1rem;">Our Team</h2>
+        <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;">Meet the professionals behind Legal Laboratory</p>
+        
+        <div class="team-grid">
+            {% for member in team_members %}
+            <div class="team-card">
+                {% if member.photo and member.photo.url %}
+                <img src="{{ member.photo.url }}" alt="{{ member.name }}">
+                {% else %}
+                <div style="width: 150px; height: 150px; border-radius: 50%; background: var(--light-blue); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 3rem;">👤</div>
+                {% endif %}
+                <h3>{{ member.name }}</h3>
+                <p class="position">{{ member.position }}</p>
+                <p style="color: var(--text-light); font-size: 0.9rem;">{{ member.bio|truncatewords:20 }}</p>
+                {% if member.email %}
+                <a href="mailto:{{ member.email }}" style="color: var(--secondary-blue); text-decoration: none; margin-top: 1rem; display: inline-block;">Contact</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+    
+    document.querySelectorAll('.about-section').forEach(section => {
+        observer.observe(section);
+    });
+</script>
+{% endblock %}
+

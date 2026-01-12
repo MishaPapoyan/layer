@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ case.title }} - Legal Laboratory{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 2rem;">
+    <h1 style="color: var(--primary-blue); margin-bottom: 1rem;">{{ case.title }}</h1>
+    <p style="color: var(--text-light); margin-bottom: 2rem;">{{ case.get_case_type_display }}</p>
+    
+    <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); margin-bottom: 2rem;">
+        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">Description</h2>
+        <p style="line-height: 1.8;">{{ case.description|linebreaks }}</p>
+    </div>
+    
+    <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); margin-bottom: 2rem;">
+        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">Scenario</h2>
+        <p style="line-height: 1.8;">{{ case.scenario|linebreaks }}</p>
+    </div>
+    
+    <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); margin-bottom: 2rem;">
+        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">Evidence</h2>
+        <p style="line-height: 1.8;">{{ case.evidence|linebreaks }}</p>
+    </div>
+    
+    {% if case.legal_documents and case.legal_documents.url %}
+    <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); margin-bottom: 2rem;">
+        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">Legal Documents</h2>
+        <a href="{{ case.legal_documents.url }}" class="btn btn-primary" download>Download Documents</a>
+    </div>
+    {% endif %}
+    
+    {% if user.is_authenticated %}
+        {% if user_analysis %}
+        <div style="background: var(--light-blue); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+            <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">Your Analysis</h3>
+            {% if user_analysis.is_evaluated %}
+            <p><strong>Score:</strong> {{ user_analysis.score }}/100</p>
+            <p><strong>Evaluation:</strong> {{ user_analysis.evaluation|linebreaks }}</p>
+            {% else %}
+            <p>Your analysis is pending evaluation.</p>
+            {% endif %}
+        </div>
+        {% else %}
+        <a href="{% url 'cases:submit_analysis' case.pk %}" class="btn btn-primary">Submit Analysis</a>
+        {% endif %}
+    {% else %}
+    <p style="color: var(--text-light);">Please <a href="{% url 'accounts:login' %}">login</a> to submit an analysis.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
