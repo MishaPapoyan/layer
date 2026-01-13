@@ -116,3 +116,36 @@ class Partner(models.Model):
     def __str__(self):
         return self.name
 
+
+class HomeInfoCard(models.Model):
+    """Second section - Info cards in single row"""
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    icon = models.CharField(max_length=50, default='📋', help_text='Emoji or icon code')
+    order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['order', '-created_at']
+    
+    def __str__(self):
+        return self.title
+
+
+class HomeFeature(models.Model):
+    """Third section - Features with icons/highlights"""
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    icon = models.CharField(max_length=50, default='⭐', help_text='Emoji or icon code')
+    highlight_number = models.CharField(max_length=20, blank=True, help_text='Optional: e.g., "100+", "24/7"')
+    order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['order', '-created_at']
+    
+    def __str__(self):
+        return self.title
+

@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'chat.middleware.AdminOnlineStatusMiddleware',  # Track admin online status
 ]
 
 ROOT_URLCONF = 'legal_lab.urls'
@@ -151,5 +152,6 @@ AUTH_USER_MODEL = 'accounts.User'
 # Login URLs
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/accounts/dashboard/'
+LOGOUT_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 

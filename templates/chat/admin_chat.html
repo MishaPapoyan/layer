@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Admin Chat Interface" %} - {% trans "Legal Laboratory" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-chat-container {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .admin-chat-header {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+    }
+    
+    .admin-chat-header h1 {
+        margin: 0 0 0.5rem 0;
+    }
+    
+    .admin-chat-layout {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 2rem;
+        height: calc(100vh - 300px);
+    }
+    
+    .sessions-list {
+        background: white;
+        border-radius: 15px;
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .sessions-header {
+        padding: 1.5rem;
+        background: var(--light-blue);
+        border-bottom: 2px solid var(--secondary-blue);
+    }
+    
+    .sessions-list-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+    }
+    
+    .session-item {
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        background: var(--bg-light);
+    }
+    
+    .session-item:hover {
+        background: var(--light-blue);
+        border-color: var(--secondary-blue);
+    }
+    
+    .session-item.active {
+        background: var(--light-blue);
+        border-color: var(--secondary-blue);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+    
+    .session-item h4 {
+        margin: 0 0 0.5rem 0;
+        color: var(--primary-blue);
+    }
+    
+    .session-item p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--text-light);
+    }
+    
+    .chat-panel {
+        background: white;
+        border-radius: 15px;
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    
+    .chat-panel-header {
+        padding: 1.5rem;
+        background: var(--light-blue);
+        border-bottom: 2px solid var(--secondary-blue);
+    }
+    
+    .chat-panel-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem;
+        background: #f9fafb;
+    }
+    
+    .chat-panel-input {
+        padding: 1.5rem;
+        background: white;
+        border-top: 2px solid var(--light-blue);
+    }
+    
+    .chat-panel-input form {
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .chat-panel-input input {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 1rem;
+    }
+    
+    .chat-panel-input input:focus {
+        outline: none;
+        border-color: var(--secondary-blue);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+    
+    .admin-message {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .admin-message.admin {
+        align-items: flex-end;
+    }
+    
+    .admin-message.user {
+        align-items: flex-start;
+    }
+    
+    .admin-message-bubble {
+        max-width: 70%;
+        padding: 0.75rem 1rem;
+        border-radius: 18px;
+        word-wrap: break-word;
+    }
+    
+    .admin-message-bubble.admin {
+        background: var(--gradient-primary);
+        color: white;
+    }
+    
+    .admin-message-bubble.user {
+        background: white;
+        color: var(--text-dark);
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .no-session-selected {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: var(--text-light);
+        font-size: 1.1rem;
+    }
+    
+    @media (max-width: 968px) {
+        .admin-chat-layout {
+            grid-template-columns: 1fr;
+        }
+        
+        .sessions-list {
+            max-height: 300px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-chat-container">
+    <div class="admin-chat-header">
+        <h1>{% trans "Admin Chat Interface" %}</h1>
+        <p>{% trans "Manage and respond to online chat sessions" %}</p>
+    </div>
+    
+    <div class="admin-chat-layout">
+        <div class="sessions-list">
+            <div class="sessions-header">
+                <h3>{% trans "Active Sessions" %}</h3>
+            </div>
+            <div class="sessions-list-body" id="sessionsList">
+                {% for session in active_sessions %}
+                <div class="session-item" onclick="loadSession('{{ session.session_id }}')" data-session-id="{{ session.session_id }}">
+                    <h4>{{ session.name|default:"Anonymous" }}</h4>
+                    <p>{{ session.email|default:"" }}</p>
+                    <p style="font-size: 0.75rem; margin-top: 0.5rem;">{{ session.last_activity|timesince }} {% trans "ago" %}</p>
+                </div>
+                {% empty %}
+                <p style="text-align: center; color: var(--text-light); padding: 2rem;">{% trans "No active chat sessions" %}</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="chat-panel">
+            <div class="chat-panel-header" id="chatPanelHeader">
+                <h3 id="sessionName">{% trans "Select a session to start chatting" %}</h3>
+            </div>
+            <div class="chat-panel-body" id="chatPanelBody">
+                <div class="no-session-selected">
+                    <p>{% trans "Select a chat session from the list to view messages and respond" %}</p>
+                </div>
+            </div>
+            <div class="chat-panel-input" id="chatPanelInput" style="display: none;">
+                <form onsubmit="sendAdminMessage(event)">
+                    <input type="text" id="adminMessageInput" placeholder="{% trans 'Type your message...' %}" autocomplete="off">
+                    <button type="submit" class="btn btn-primary">{% trans "Send" %}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentSessionId = null;
+    let adminPollInterval = null;
+    
+    function loadSession(sessionId) {
+        currentSessionId = sessionId;
+        
+        // Update UI
+        document.querySelectorAll('.session-item').forEach(item => {
+            item.classList.remove('active');
+            if (item.dataset.sessionId === sessionId) {
+                item.classList.add('active');
+            }
+        });
+        
+        // Load messages
+        loadSessionMessages(sessionId);
+        
+        // Show input
+        document.getElementById('chatPanelInput').style.display = 'block';
+        
+        // Start polling
+        if (adminPollInterval) {
+            clearInterval(adminPollInterval);
+        }
+        adminPollInterval = setInterval(() => {
+            loadSessionMessages(sessionId);
+        }, 2000);
+    }
+    
+    function loadSessionMessages(sessionId) {
+        fetch(`/chat/admin/chat/${sessionId}/messages/`, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error(data.error);
+                return;
+            }
+            
+            // Update session name
+            document.getElementById('sessionName').textContent = data.session.name || 'Anonymous';
+            
+            // Display messages
+            displayAdminMessages(data.messages);
+        })
+        .catch(error => {
+            console.error('Error loading messages:', error);
+        });
+    }
+    
+    function displayAdminMessages(messages) {
+        const container = document.getElementById('chatPanelBody');
+        container.innerHTML = '';
+        
+        if (messages.length === 0) {
+            container.innerHTML = '<div class="no-session-selected"><p>{% trans "No messages yet. Start the conversation!" %}</p></div>';
+            return;
+        }
+        
+        messages.forEach(msg => {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `admin-message ${msg.sender_type}`;
+            
+            const bubble = document.createElement('div');
+            bubble.className = `admin-message-bubble ${msg.sender_type}`;
+            bubble.textContent = msg.message;
+            
+            messageDiv.appendChild(bubble);
+            container.appendChild(messageDiv);
+        });
+        
+        // Scroll to bottom
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    function sendAdminMessage(event) {
+        event.preventDefault();
+        
+        if (!currentSessionId) return;
+        
+        const input = document.getElementById('adminMessageInput');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        fetch(`/chat/admin/chat/${currentSessionId}/send/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                message: message
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                input.value = '';
+                loadSessionMessages(currentSessionId);
+            }
+        })
+        .catch(error => {
+            console.error('Error sending message:', error);
+        });
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    // Auto-refresh sessions list
+    setInterval(() => {
+        location.reload();
+    }, 30000); // Refresh every 30 seconds
+</script>
+{% endblock %}
+

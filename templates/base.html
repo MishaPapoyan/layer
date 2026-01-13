@@ -370,6 +370,31 @@
             min-height: calc(100vh - 200px);
         }
         
+        /* Global Page Content Entrance Animation */
+        .page-content-wrapper {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: pageEntrance 0.6s ease-out forwards;
+        }
+        
+        @keyframes pageEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Apply to main content blocks */
+        .main-content > *:first-child:not(.page-content-wrapper) {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: pageEntrance 0.6s ease-out forwards;
+        }
+        
         /* Footer */
         .footer {
             background: var(--gradient-primary);
@@ -877,13 +902,18 @@
                 max-width: 200px;
             }
             
-            .floating-contact-btn {
-                bottom: 1rem;
-                right: 1rem;
-                width: 50px;
-                height: 50px;
-                font-size: 1.2rem;
-            }
+        .floating-contact-btn {
+            bottom: 9rem;
+            right: 1rem;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+        }
+        
+        .floating-chat-btn {
+            bottom: 1rem;
+            right: 1rem;
+        }
             
             .container {
                 padding: 1.5rem;
@@ -913,6 +943,59 @@
             .nav-container {
                 padding: 0 0.75rem;
             }
+            
+            h1 {
+                font-size: clamp(1.5rem, 5vw, 2rem);
+            }
+            
+            h2 {
+                font-size: clamp(1.25rem, 4vw, 1.75rem);
+            }
+            
+            h3 {
+                font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+            }
+            
+            p, .btn {
+                font-size: clamp(0.875rem, 2.5vw, 1rem);
+            }
+        }
+        
+        /* Fluid Typography */
+        html {
+            font-size: clamp(14px, 1.5vw, 16px);
+        }
+        
+        /* Responsive Images */
+        img, video, iframe {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Responsive Grid Improvements */
+        @media (max-width: 320px) {
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .nav-container {
+                padding: 0 0.5rem;
+            }
+        }
+        
+        /* Tablet Optimizations */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .container {
+                padding: clamp(1rem, 3vw, 2rem);
+            }
+        }
+        
+        /* Desktop Large */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+            }
         }
     </style>
     
@@ -936,7 +1019,15 @@
                 <li><a href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'accounts:dashboard' %}">{% trans "Dashboard" %}</a></li>
-                    <li><a href="{% url 'accounts:logout' %}" class="btn btn-outline">{% trans "Logout" %}</a></li>
+                    {% if user.is_staff %}
+                    <li><a href="{% url 'chat:admin_chat' %}" style="background: rgba(255, 255, 255, 0.2);">💬 {% trans "Admin Chat" %}</a></li>
+                    {% endif %}
+                    <li>
+                        <form method="post" action="{% url 'accounts:logout' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline" style="background: transparent; border: 2px solid var(--white); color: var(--white); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 1rem; font-family: inherit;">{% trans "Logout" %}</button>
+                        </form>
+                    </li>
                 {% else %}
                     <li><a href="{% url 'accounts:login' %}" class="btn btn-outline">{% trans "Login" %}</a></li>
                     <li><a href="{% url 'accounts:register' %}" class="btn btn-primary">{% trans "Register" %}</a></li>
@@ -1040,9 +1131,12 @@
         </div>
     </footer>
     
+    <!-- Online Chat Widget -->
+    {% include 'chat/widget.html' %}
+    
     <!-- Floating Contact Button -->
-    <a href="#" class="floating-contact-btn" onclick="event.preventDefault(); openContactModal();" title="{% trans 'Contact Us' %}">
-        💬
+    <a href="#" class="floating-contact-btn" onclick="event.preventDefault(); openContactModal();" title="{% trans 'Contact Us' %}" style="bottom: 9rem;">
+        📧
     </a>
     
     <!-- Contact Modal -->

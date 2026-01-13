@@ -18,6 +18,8 @@
         padding: 4rem 2rem;
         max-width: 1400px;
         margin: 0 auto;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .category-card {
@@ -109,6 +111,7 @@
     @media (max-width: 1200px) {
         .categories-grid {
             grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
         }
     }
     
@@ -116,12 +119,25 @@
         .categories-grid {
             grid-template-columns: 1fr;
             gap: 2rem;
+            padding: 3rem 1.5rem;
+        }
+        
+        .category-card {
+            min-height: 300px;
+            padding: 2rem 1.5rem;
+        }
+    }
+    
+    @media (min-width: 1201px) {
+        .categories-grid {
+            grid-template-columns: repeat(3, 1fr);
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
+<div class="page-content-wrapper">
 <div class="education-hero">
     <div class="container">
         <h1>Legal Education</h1>
@@ -130,17 +146,16 @@
 </div>
 
 <div class="categories-grid">
-    <div class="container">
-        {% for category in categories %}
-        <a href="{% url 'education:category_detail' category.pk %}" class="category-card">
-            <div class="category-icon">{{ category.icon|default:"📚" }}</div>
-            <h3>{{ category.name }}</h3>
-            <p>{{ category.description|truncatewords:20 }}</p>
-        </a>
-        {% empty %}
-        <p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No categories available yet.</p>
-        {% endfor %}
-    </div>
+    {% for category in categories %}
+    <a href="{% url 'education:category_detail' category.pk %}" class="category-card">
+        <div class="category-icon">{{ category.icon|default:"📚" }}</div>
+        <h3>{{ category.name }}</h3>
+        <p>{{ category.description|truncatewords:20 }}</p>
+    </a>
+    {% empty %}
+    <p style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 4rem 2rem;">No categories available yet.</p>
+    {% endfor %}
+</div>
 </div>
 {% endblock %}
 

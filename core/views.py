@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import SliderItem, AboutSection, TeamMember, ContactInfo, ContactMessage, BlogPost, Partner
+from .models import SliderItem, AboutSection, TeamMember, ContactInfo, ContactMessage, BlogPost, Partner, HomeInfoCard, HomeFeature
 from .forms import ContactForm
 
 
@@ -9,6 +9,8 @@ def home(request):
     slider_items = SliderItem.objects.filter(is_active=True)
     blog_posts = BlogPost.objects.filter(is_active=True)[:3]
     partners = Partner.objects.filter(is_active=True)
+    info_cards = HomeInfoCard.objects.filter(is_active=True)[:4]
+    features = HomeFeature.objects.filter(is_active=True)[:6]
     
     # Get latest news
     try:
@@ -30,6 +32,8 @@ def home(request):
         'active_games': active_games,
         'blog_posts': blog_posts,
         'partners': partners,
+        'info_cards': info_cards,
+        'features': features,
     }
     return render(request, 'core/home.html', context)
 

@@ -20,6 +20,24 @@
         padding: 4rem 2rem;
     }
     
+    /* Page Content Entrance Animation */
+    .page-content-wrapper {
+        opacity: 0;
+        transform: translateY(40px);
+        animation: pageEntrance 0.6s ease-out forwards;
+    }
+    
+    @keyframes pageEntrance {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
     .about-section {
         margin-bottom: 4rem;
         display: grid;
@@ -84,8 +102,8 @@
     }
     
     .audience-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-lg);
+        transform: translateY(-10px);
+        box-shadow: 0 15px 25px rgba(0,0,0,0.2);
     }
     
     .audience-card h3 {
@@ -151,6 +169,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="page-content-wrapper">
 <div class="about-hero">
     <div class="container">
         <h1>About Legal Laboratory</h1>
@@ -191,24 +210,28 @@
         <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;">We serve professionals and students across the legal spectrum</p>
         
         <div class="audience-grid">
-            <div class="audience-card">
-                <h3>👨‍🎓 Students</h3>
-                <p>Comprehensive learning materials, exam preparation, and interactive games to enhance your legal knowledge.</p>
+            <div class="audience-card" style="background:#f9f9f9; padding:1.5rem; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1); transition:transform 0.3s ease, box-shadow 0.3s ease; cursor:pointer; text-align:center;">
+                <div style="font-size:3rem; margin-bottom:0.5rem;">👨‍🎓</div>
+                <h3 style="margin-bottom:0.5rem; color: var(--primary-blue);">Students</h3>
+                <p style="color: var(--text-light);">Comprehensive learning materials, exam preparation, and interactive games to enhance your legal knowledge.</p>
             </div>
             
-            <div class="audience-card">
-                <h3>🕵️ Investigators</h3>
-                <p>Practical case analysis tools and scenarios to develop investigative skills and legal reasoning.</p>
+            <div class="audience-card" style="background:#f0f8ff; padding:1.5rem; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1); transition:transform 0.3s ease, box-shadow 0.3s ease; cursor:pointer; text-align:center;">
+                <div style="font-size:3rem; margin-bottom:0.5rem;">🕵️</div>
+                <h3 style="margin-bottom:0.5rem; color: var(--primary-blue);">Investigators</h3>
+                <p style="color: var(--text-light);">Practical case analysis tools and scenarios to develop investigative skills and legal reasoning.</p>
             </div>
             
-            <div class="audience-card">
-                <h3>⚖️ Lawyers</h3>
-                <p>Professional development resources, case studies, and networking opportunities with peers.</p>
+            <div class="audience-card" style="background:#fff0f5; padding:1.5rem; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1); transition:transform 0.3s ease, box-shadow 0.3s ease; cursor:pointer; text-align:center;">
+                <div style="font-size:3rem; margin-bottom:0.5rem;">⚖️</div>
+                <h3 style="margin-bottom:0.5rem; color: var(--primary-blue);">Lawyers</h3>
+                <p style="color: var(--text-light);">Professional development resources, case studies, and networking opportunities with peers.</p>
             </div>
             
-            <div class="audience-card">
-                <h3>👨‍⚖️ Prosecutors</h3>
-                <p>Advanced case analysis, legal procedure training, and courtroom simulation exercises.</p>
+            <div class="audience-card" style="background:#f5fff0; padding:1.5rem; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1); transition:transform 0.3s ease, box-shadow 0.3s ease; cursor:pointer; text-align:center;">
+                <div style="font-size:3rem; margin-bottom:0.5rem;">👨‍⚖️</div>
+                <h3 style="margin-bottom:0.5rem; color: var(--primary-blue);">Prosecutors</h3>
+                <p style="color: var(--text-light);">Advanced case analysis, legal procedure training, and courtroom simulation exercises.</p>
             </div>
         </div>
     </div>
@@ -240,6 +263,7 @@
     </div>
 </div>
 {% endif %}
+</div>
 {% endblock %}
 
 {% block extra_js %}

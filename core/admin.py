@@ -1,6 +1,6 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
-from .models import SliderItem, AboutSection, TeamMember, ContactInfo, ContactMessage, BlogPost, Partner
+from .models import SliderItem, AboutSection, TeamMember, ContactInfo, ContactMessage, BlogPost, Partner, HomeInfoCard, HomeFeature
 
 
 @admin.register(SliderItem)
@@ -54,4 +54,20 @@ class PartnerAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     list_filter = ['is_active', 'created_at']
     search_fields = ['name']
+
+
+@admin.register(HomeInfoCard)
+class HomeInfoCardAdmin(TranslationAdmin):
+    list_display = ['title', 'icon', 'order', 'is_active', 'created_at']
+    list_editable = ['order', 'is_active']
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['title', 'description']
+
+
+@admin.register(HomeFeature)
+class HomeFeatureAdmin(TranslationAdmin):
+    list_display = ['title', 'icon', 'highlight_number', 'order', 'is_active', 'created_at']
+    list_editable = ['order', 'is_active']
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['title', 'description']
 

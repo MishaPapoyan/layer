@@ -21,7 +21,7 @@
         animation: pageLoad 0.8s ease-out;
     }
     
-    /* Hero Slider - Right Aligned */
+    /* Hero Slider - Left Aligned */
     .hero-slider {
         position: relative;
         height: 700px;
@@ -41,8 +41,8 @@
         background-position: center;
         display: flex;
         align-items: center;
-        justify-content: flex-end;
-        padding-right: 5%;
+        justify-content: flex-start;
+        padding-left: 5%;
         box-sizing: border-box;
     }
     
@@ -51,25 +51,25 @@
     }
     
     .slide-content {
-        text-align: right;
+        text-align: left;
         color: white;
         background: rgba(30, 58, 138, 0.88);
         backdrop-filter: blur(20px);
         padding: 4rem 5rem;
         border-radius: 30px;
         max-width: 650px;
-        margin-right: 3rem;
-        animation: slideInRight 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-left: 3rem;
+        animation: slideInLeft 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
         border: 2px solid rgba(255, 255, 255, 0.25);
         box-sizing: border-box;
         transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    @keyframes slideInRight {
+    @keyframes slideInLeft {
         from {
             opacity: 0;
-            transform: translateX(60px) scale(0.95);
+            transform: translateX(-60px) scale(0.95);
         }
         to {
             opacity: 1;
@@ -394,6 +394,173 @@
         margin-bottom: 1.5rem;
     }
     
+    /* Second Section - Info Cards (Single Row) */
+    .info-cards-section {
+        padding: 4rem 2rem;
+        background: var(--white);
+    }
+    
+    .info-cards-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        justify-content: center;
+    }
+    
+    .info-card {
+        flex: 1;
+        min-width: 250px;
+        max-width: 300px;
+        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid rgba(59, 130, 246, 0.1);
+        text-align: center;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    .info-card:nth-child(1) { animation-delay: 0.1s; }
+    .info-card:nth-child(2) { animation-delay: 0.2s; }
+    .info-card:nth-child(3) { animation-delay: 0.3s; }
+    .info-card:nth-child(4) { animation-delay: 0.4s; }
+    
+    .info-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(30, 58, 138, 0.2);
+        border-color: var(--secondary-blue);
+    }
+    
+    .info-card-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+    
+    .info-card:hover .info-card-icon {
+        transform: scale(1.2) rotate(5deg);
+    }
+    
+    .info-card h3 {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    
+    .info-card p {
+        color: var(--text-light);
+        line-height: 1.8;
+        font-size: 1rem;
+    }
+    
+    /* Third Section - Features with Icons */
+    .features-section {
+        padding: 5rem 2rem;
+        background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2.5rem;
+        max-width: 1400px;
+        margin: 3rem auto 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .feature-card {
+        background: var(--white);
+        padding: 3rem;
+        border-radius: 24px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: center;
+        border: 2px solid rgba(59, 130, 246, 0.1);
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-card:nth-child(1) { animation-delay: 0.1s; }
+    .feature-card:nth-child(2) { animation-delay: 0.2s; }
+    .feature-card:nth-child(3) { animation-delay: 0.3s; }
+    .feature-card:nth-child(4) { animation-delay: 0.4s; }
+    .feature-card:nth-child(5) { animation-delay: 0.5s; }
+    .feature-card:nth-child(6) { animation-delay: 0.6s; }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+        transition: left 0.5s;
+    }
+    
+    .feature-card:hover::before {
+        left: 100%;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 25px 60px rgba(30, 58, 138, 0.25);
+        border-color: var(--secondary-blue);
+    }
+    
+    .feature-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover .feature-icon {
+        transform: scale(1.15) rotate(5deg);
+    }
+    
+    .feature-highlight {
+        display: inline-block;
+        background: var(--gradient-primary);
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
+    }
+    
+    .feature-card h3 {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    
+    .feature-card p {
+        color: var(--text-light);
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+    
     .intro-section {
         padding: 5rem 2rem;
         text-align: center;
@@ -430,6 +597,21 @@
     }
     
     @media (max-width: 968px) {
+        .info-cards-row {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .info-card {
+            max-width: 100%;
+            width: 100%;
+        }
+        
+        .features-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        
         .blog-grid {
             grid-template-columns: 1fr;
             gap: 2.5rem;
@@ -449,6 +631,7 @@
         
         .slide-content {
             text-align: center;
+            margin-left: 0;
             margin-right: 0;
             padding: 3rem;
             max-width: 90%;
@@ -456,7 +639,7 @@
         
         .slide {
             justify-content: center;
-            padding-right: 0;
+            padding-left: 0;
         }
         
         .cta-grid {
@@ -479,6 +662,12 @@
         
         .slide-content p {
             font-size: 1.2rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .features-grid {
+            grid-template-columns: 1fr;
         }
     }
     
@@ -578,15 +767,48 @@
         {% endif %}
     </div>
 
-    <!-- Introduction Section -->
-    <div class="intro-section">
+    <!-- Second Section - Info Cards (Single Row) -->
+    {% if info_cards %}
+    <div class="info-cards-section">
         <div class="container">
-            <h2>{% trans "Welcome to Legal Laboratory" %}</h2>
-            <p style="font-size: 1.2rem; color: var(--text-light); max-width: 900px; margin: 2rem auto; line-height: 1.8;">{% trans "We provide a comprehensive platform for legal education, practical case analysis, gamified learning, and professional interaction. Whether you're a student, investigator, lawyer, or prosecutor, our platform offers the tools and resources you need to excel in your legal career." %}</p>
+            <div class="info-cards-row">
+                {% for card in info_cards %}
+                <div class="info-card">
+                    <span class="info-card-icon">{{ card.icon|default:"📋" }}</span>
+                    <h3>{{ card.title }}</h3>
+                    <p>{{ card.description|truncatewords:20 }}</p>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
+    {% endif %}
 
-    <!-- Blog Section -->
+    <!-- Third Section - Features with Icons -->
+    {% if features %}
+    <div class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>{% trans "Key Features" %}</h2>
+                <p>{% trans "Why choose Legal Laboratory" %}</p>
+            </div>
+            <div class="features-grid">
+                {% for feature in features %}
+                <div class="feature-card">
+                    <span class="feature-icon">{{ feature.icon|default:"⭐" }}</span>
+                    {% if feature.highlight_number %}
+                    <div class="feature-highlight">{{ feature.highlight_number }}</div>
+                    {% endif %}
+                    <h3>{{ feature.title }}</h3>
+                    <p>{{ feature.description|truncatewords:25 }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Fourth Section - Blog Preview -->
     {% if blog_posts %}
     <div class="blog-section">
         <div class="container">
