@@ -1016,6 +1016,7 @@
                 <li><a href="{% url 'games:home' %}">{% trans "Games" %}</a></li>
                 <li><a href="{% url 'cases:home' %}">{% trans "Cases" %}</a></li>
                 <li><a href="{% url 'news:home' %}">{% trans "News" %}</a></li>
+                <li><a href="{% url 'applications:generator' %}">{% trans "Application Generator" %}</a></li>
                 <li><a href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'accounts:dashboard' %}">{% trans "Dashboard" %}</a></li>

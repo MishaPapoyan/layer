@@ -21,6 +21,7 @@ urlpatterns += i18n_patterns(
     path('cases/', include('cases.urls')),
     path('chat/', include('chat.urls')),
     path('news/', include('news.urls')),
+    path('applications/', include('applications.urls')),
     prefix_default_language=False,
 )
 

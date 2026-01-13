@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'cases',
     'chat',
     'news',
+    'applications',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Create" %} {{ application_type.name }} - {% trans "Application Generator" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-content-wrapper {
+        opacity: 0;
+        transform: translateY(40px);
+        animation: pageEntrance 0.6s ease-out forwards;
+    }
+    
+    .create-hero {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+    }
+    
+    .form-container {
+        max-width: 900px;
+        margin: 3rem auto;
+        padding: 0 2rem;
+    }
+    
+    .application-form {
+        background: white;
+        padding: 3rem;
+        border-radius: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-group {
+        margin-bottom: 2rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--secondary-blue);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+    
+    .form-group .help-text {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        margin-top: 0.5rem;
+    }
+    
+    .required-field::after {
+        content: ' *';
+        color: #ef4444;
+    }
+    
+    @media (max-width: 768px) {
+        .form-container {
+            padding: 0 1rem;
+        }
+        
+        .application-form {
+            padding: 2rem 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="create-hero">
+        <div class="container">
+            <h1>{{ application_type.name }}</h1>
+            <p>{{ application_type.description }}</p>
+        </div>
+    </div>
+    
+    <div class="form-container">
+        <div class="application-form">
+            <form method="post">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}" class="{% if field.field.required %}required-field{% endif %}">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <div class="help-text">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div style="color: #ef4444; font-size: 0.85rem; margin-top: 0.5rem;">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1; padding: 1rem; font-size: 1.1rem;">
+                        {% trans "Generate Document" %}
+                    </button>
+                    <a href="{% url 'applications:generator' %}" class="btn btn-outline" style="padding: 1rem; font-size: 1.1rem;">
+                        {% trans "Cancel" %}
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

@@ -3,7 +3,8 @@ from modeltranslation.admin import TranslationAdmin
 from .models import (
     GameType, Game, GameQuestion, GameAnswer,
     GameSession, GameAnswerSubmission, Leaderboard,
-    MultiplayerGameRoom, MultiplayerGameMove
+    MultiplayerGameRoom, MultiplayerGameMove,
+    QuizQuestion, QuizAnswer, MultiplayerQuizMatch, QuizMatchAnswer
 )
 
 
@@ -79,4 +80,42 @@ class MultiplayerGameMoveAdmin(admin.ModelAdmin):
     list_filter = ['move_type', 'timestamp']
     search_fields = ['room__room_code', 'player__username']
     readonly_fields = ['timestamp']
+
+
+class QuizAnswerInline(admin.TabularInline):
+    model = QuizAnswer
+    extra = 2
+
+
+@admin.register(QuizQuestion)
+class QuizQuestionAdmin(TranslationAdmin):
+    list_display = ['question_text', 'category', 'difficulty', 'time_limit', 'points', 'is_active', 'created_at']
+    list_filter = ['category', 'difficulty', 'is_active', 'created_at']
+    list_editable = ['is_active', 'points', 'time_limit']
+    search_fields = ['question_text', 'category']
+    inlines = [QuizAnswerInline]
+
+
+@admin.register(QuizAnswer)
+class QuizAnswerAdmin(admin.ModelAdmin):
+    list_display = ['answer_text', 'question', 'is_correct', 'order']
+    list_filter = ['is_correct', 'question__category']
+    list_editable = ['is_correct', 'order']
+    search_fields = ['answer_text', 'question__question_text']
+
+
+@admin.register(MultiplayerQuizMatch)
+class MultiplayerQuizMatchAdmin(admin.ModelAdmin):
+    list_display = ['id', 'player1', 'player2', 'status', 'player1_score', 'player2_score', 'winner', 'created_at']
+    list_filter = ['status', 'created_at']
+    search_fields = ['player1__username', 'player2__username']
+    readonly_fields = ['created_at', 'started_at', 'completed_at']
+
+
+@admin.register(QuizMatchAnswer)
+class QuizMatchAnswerAdmin(admin.ModelAdmin):
+    list_display = ['match', 'player', 'question', 'is_correct', 'points_earned', 'time_taken', 'answered_at']
+    list_filter = ['is_correct', 'answered_at']
+    search_fields = ['match__id', 'player__username', 'question__question_text']
+    readonly_fields = ['answered_at']
 

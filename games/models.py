@@ -196,3 +196,97 @@ class MultiplayerGameMove(models.Model):
     def __str__(self):
         return f"{self.player.username} - {self.move_type} - {self.room.room_code}"
 
+
+class QuizQuestion(models.Model):
+    """Legal quiz questions for multiplayer games"""
+    DIFFICULTY_CHOICES = [
+        ('basic', 'Basic'),
+        ('intermediate', 'Intermediate'),
+        ('advanced', 'Advanced'),
+    ]
+    
+    question_text = models.TextField()
+    category = models.CharField(max_length=100, help_text="Legal category (Criminal Law, Civil Law, etc.)")
+    difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES, default='basic')
+    time_limit = models.IntegerField(default=30, help_text="Time limit in seconds")
+    points = models.IntegerField(default=10)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.category} - {self.question_text[:50]}"
+
+
+class QuizAnswer(models.Model):
+    """Answers for quiz questions"""
+    question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE, related_name='answers')
+    answer_text = models.TextField()
+    is_correct = models.BooleanField(default=False)
+    explanation = models.TextField(blank=True, help_text="Explanation shown after answering")
+    order = models.IntegerField(default=0)
+    
+    class Meta:
+        ordering = ['order']
+    
+    def __str__(self):
+        return f"{self.question} - {self.answer_text[:50]}"
+
+
+class MultiplayerQuizMatch(models.Model):
+    """Multiplayer quiz match"""
+    STATUS_CHOICES = [
+        ('searching', 'Searching for Opponent'),
+        ('matched', 'Matched'),
+        ('active', 'Game Active'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
+    
+    player1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quiz_matches_as_player1')
+    player2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quiz_matches_as_player2', null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='searching')
+    player1_score = models.IntegerField(default=0)
+    player2_score = models.IntegerField(default=0)
+    current_question = models.ForeignKey(QuizQuestion, on_delete=models.SET_NULL, null=True, blank=True)
+    question_number = models.IntegerField(default=0)
+    total_questions = models.IntegerField(default=5)
+    winner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='won_quiz_matches')
+    created_at = models.DateTimeField(auto_now_add=True)
+    started_at = models.DateTimeField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Match: {self.player1.username} vs {self.player2.username if self.player2 else 'Waiting...'}"
+    
+    def get_opponent(self, user):
+        """Get opponent for a given user"""
+        if user == self.player1:
+            return self.player2
+        return self.player1
+
+
+class QuizMatchAnswer(models.Model):
+    """Player answers in quiz match"""
+    match = models.ForeignKey(MultiplayerQuizMatch, on_delete=models.CASCADE, related_name='answers')
+    player = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE)
+    selected_answer = models.ForeignKey(QuizAnswer, on_delete=models.CASCADE, null=True, blank=True)
+    is_correct = models.BooleanField(default=False)
+    points_earned = models.IntegerField(default=0)
+    time_taken = models.IntegerField(default=0, help_text="Time taken in seconds")
+    answered_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['answered_at']
+        unique_together = ['match', 'player', 'question']
+    
+    def __str__(self):
+        return f"{self.player.username} - {self.question} - {'Correct' if self.is_correct else 'Incorrect'}"
+
+
